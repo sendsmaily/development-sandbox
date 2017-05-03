@@ -1,0 +1,29 @@
+---
+version: '3'
+
+services:
+  web-api:
+    build:
+      context: ./web-api
+      dockerfile: Dockerfile.sandbox
+      args:
+        user_id: ${SANDBOX_USER_ID}
+        user_name: ${SANDBOX_USER_NAME}
+        group_id: ${SANDBOX_GROUP_ID}
+        group_name: ${SANDBOX_GROUP_NAME}
+    image: codeclub/web-api:sandbox
+    hostname: web-api  # For nice label on shell prompt.
+    entrypoint: /bin/bash
+    volumes:
+      # Note the paths are relative to project root.
+      - ./web-api:/srv/application
+      - ./.data/packages:/srv/packages
+    environment:
+      - DJANGO_SETTINGS_MODULE=web_api.settings
+      - WEB_API_DATABASE_HOST=database
+      - WEB_API_DATABASE_PORT=3306
+      - WEB_API_DATABASE_NAME=codeclub
+      - WEB_API_DATABASE_USER=root
+      - WEB_API_DATABASE_PASSWORD=codeclub
+    stdin_open: true
+    tty: true
