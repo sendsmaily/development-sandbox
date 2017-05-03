@@ -1,0 +1,28 @@
+FROM node:7.9
+
+# Declare build variables.
+ARG user_id
+ARG user_name
+ARG group_id
+ARG group_name
+
+# Set up local user.
+RUN usermod -u 999 node && groupmod -g 999 node \
+    && groupadd -g $group_id $group_name \
+    && useradd -m -u $user_id -g $group_id $user_name -s /bin/bash
+
+# Set up environment.
+ENV APPLICATION_PATH /srv/application
+
+# Set up directories.
+RUN mkdir -p ${APPLICATION_PATH}
+
+WORKDIR ${APPLICATION_PATH}
+
+# Inject package.json separate from the rest of
+# the codebase to make use of Docker's build cache.
+COPY package.json package.json
+RUN npm install
+
+# Drop to non-privileged user.
+USER $user_name
