@@ -18,14 +18,14 @@ services:
     ports:
       - '3306:3306'  # For your favorite MySQL client use.
     environment:
-      - MYSQL_ROOT_PASSWORD=codeclub
-      - MYSQL_DATABASE=codeclub
+      - MYSQL_ROOT_PASSWORD=development-sandbox
+      - MYSQL_DATABASE=development-sandbox
 
   load-balancer:
     build:
       context: ./load-balancer
       dockerfile: Dockerfile.sandbox
-    image: codeclub/load-balancer:sandbox
+    image: development-sandbox/load-balancer:sandbox
     networks:
       default:
         ipv4_address: '172.30.255.254'  # Setting well-known IP address for your /etc/hosts file.
