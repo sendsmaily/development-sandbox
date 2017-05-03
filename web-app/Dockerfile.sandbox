@@ -19,10 +19,5 @@ RUN mkdir -p ${APPLICATION_PATH}
 
 WORKDIR ${APPLICATION_PATH}
 
-# Inject package.json separate from the rest of
-# the codebase to make use of Docker's build cache.
-COPY package.json package.json
-RUN npm install
-
 # Drop to non-privileged user.
 USER $user_name
