@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "es6": true,
+    "jest": true
+  },
+  "ecmaFeatures": {
+    "jsx": true,
+    "templateStrings": true,
+    "superInFunctions": false,
+    "classes": true,
+    "modules": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "babel",
+    "react"
+  ],
+  "extends": ["airbnb"],
+  "rules": {
+    "react/jsx-closing-bracket-location": [2, "after-props"],
+    "jsx-a11y/no-static-element-interactions": 0,
+    "import/no-named-as-default": 0,
+    "capitalized-comments": ["error", "always"]
+  }
+}
