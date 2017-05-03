@@ -1,0 +1,113 @@
+#!/bin/bash
+
+set -e
+
+# Set up sandbox environment.
+export SANDBOX=true
+export BASE_DIR=$(cd `dirname "${BASH_SOURCE%/*}"` && pwd)
+export SANDBOX_DIR="${BASE_DIR}"
+export SANDBOX_PROJECT_NAME="${PWD##*/}"
+
+# Bits and pieces required to run sandbox containers.
+export SANDBOX_USER_ID=$(id -u)
+export SANDBOX_GROUP_ID=$(id -g)
+export SANDBOX_USER_NAME=$(id -un)
+export SANDBOX_GROUP_NAME=$(id -gn)
+
+
+function _stack() {
+    #
+    # Stack helper function.
+    #
+    # Wraps docker-compose command for simple invocation.
+    #
+    docker-compose \
+        --project-name ${SANDBOX_PROJECT_NAME} \
+        --file docker-compose.sandbox.yml \
+        --file web-app/service.sandbox.yml \
+        --file web-api/service.sandbox.yml \
+        "${@:1}"
+}
+
+
+function _clean() {
+    #
+    # Stack clean helper.
+    #
+    # Tears down stack and removes dangling images.
+    #
+
+    # Tear down stack.
+    _stack ${1} down --remove-orphans
+
+    # Clean dangling images.
+    docker image prune -f
+}
+
+
+function _help() {
+    #
+    # Helper for printing usage info.
+    #
+    echo
+    echo "Manage sandbox."
+    echo
+    echo "Usage:"
+    echo "  sandbox COMMAND [ARGUMENTS]"
+    echo
+    echo "Available commands:"
+    echo "  build [ARGS]            Build or rebuild the stack."
+    echo "                              Accepts same arguments as 'docker-compose build'."
+    echo "  up [ARGS]               Start the stack."
+    echo "                              Accepts same argument as 'docker-compose up'."
+    echo "  down                    Stop the stack."
+    echo "  clean                   Run the cleanup."
+    echo "  logs [SERVICE]          Attach to logs output."
+    echo
+}
+
+
+
+case ${1:-} in
+    "build")
+        # Build sandbox.
+        _stack build "${@:2}"
+        # Clean dangling images.
+        docker image prune -f
+        ;;
+    "clean")
+        _clean
+        ;;
+    "exec")
+        _stack exec "${@:2}"
+        ;;
+    "help")
+        _help
+        ;;
+    "logs")
+        _stack logs -f "${@:2}"
+        ;;
+    "up")
+        echo -e "\033[1;33mEnsuring directories...\033[0m"
+        # Ensure packages directory exists before launching the stack.
+        # This allows the mounted volume to have current user's permissions
+        # within container.
+        mkdir -p ${SANDBOX_DIR}/.data/packages
+
+        echo -e "\033[1;33mLaunching stack...\033[0m"
+        _stack up -d ${@:2}
+
+        # Attach terminals.
+        echo -e "\033[1;33mAttaching terminals...\033[0m"
+        exec gnome-terminal \
+            --tab --title "web-app" --command "docker attach --sig-proxy=false `_stack ps -q web-app`" \
+            --tab --title "web-api" --command "docker attach --sig-proxy=false `_stack ps -q web-api`" \
+            --tab --title "database" --command "docker exec -it `_stack ps -q database` /bin/bash" \
+            > /dev/null 2>&1
+        ;;
+    "down")
+        _stack stop "${@:2}"
+        ;;
+    *)
+        _help
+esac
