@@ -11,7 +11,7 @@ services:
         user_name: ${SANDBOX_USER_NAME}
         group_id: ${SANDBOX_GROUP_ID}
         group_name: ${SANDBOX_GROUP_NAME}
-    image: codeclub/web-app:sandbox
+    image: development-sandbox/web-app:sandbox
     hostname: web-app  # For nice label on shell prompt.
     entrypoint: /bin/bash
     volumes:

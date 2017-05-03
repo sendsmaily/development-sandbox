@@ -11,7 +11,7 @@ services:
         user_name: ${SANDBOX_USER_NAME}
         group_id: ${SANDBOX_GROUP_ID}
         group_name: ${SANDBOX_GROUP_NAME}
-    image: codeclub/web-api:sandbox
+    image: development-sandbox/web-api:sandbox
     hostname: web-api  # For nice label on shell prompt.
     entrypoint: /bin/bash
     volumes:
@@ -22,8 +22,8 @@ services:
       - DJANGO_SETTINGS_MODULE=web_api.settings
       - WEB_API_DATABASE_HOST=database
       - WEB_API_DATABASE_PORT=3306
-      - WEB_API_DATABASE_NAME=codeclub
+      - WEB_API_DATABASE_NAME=development-sandbox
       - WEB_API_DATABASE_USER=root
-      - WEB_API_DATABASE_PASSWORD=codeclub
+      - WEB_API_DATABASE_PASSWORD=development-sandbox
     stdin_open: true
     tty: true
