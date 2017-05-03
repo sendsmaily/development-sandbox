@@ -1,0 +1,32 @@
+logLevel = "DEBUG"
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[web]
+  address = ":8080"
+
+[file]
+  [backends]
+    [backends.web_app]
+      [backends.web_app.servers.main]
+      url = "http://web-app:8000"
+
+    [backends.web_api]
+      [backends.web_api.servers.main]
+      url = "http://web-api:8000"
+
+  [frontends]
+    [frontends.web_app]
+    backend = "web_app"
+    passHostHeader = true
+      [frontends.web_app.routes.main]
+      rule = "Host:app.development.sandbox"
+
+    [frontends.web_api]
+    backend = "web_api"
+    passHostHeader = true
+      [frontends.web_api.routes.main]
+      rule = "Host:api.development.sandbox"

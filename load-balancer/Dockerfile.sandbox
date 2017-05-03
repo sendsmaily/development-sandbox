@@ -1,0 +1,5 @@
+FROM traefik:1.2
+
+COPY .sandbox /usr/local
+
+ENTRYPOINT ["/traefik", "--configFile=/usr/local/etc/traefik/traefik.toml"]
