@@ -1,0 +1,5 @@
+__pycache__
+dist
+node_modules
+.data/
+*.sublime-workspace
