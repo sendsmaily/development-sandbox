@@ -8,8 +8,8 @@ ARG group_name
 
 # Set up local user.
 RUN usermod -u 999 node && groupmod -g 999 node \
-    && groupadd -g $group_id $group_name \
-    && useradd -m -u $user_id -g $group_id $user_name -s /bin/bash
+    && groupadd -g ${group_id} ${group_name} \
+    && useradd -m -u ${user_id} -g ${group_id} ${user_name} -s /bin/bash
 
 # Set up environment.
 ENV APPLICATION_PATH /srv/application
@@ -20,4 +20,4 @@ RUN mkdir -p ${APPLICATION_PATH}
 WORKDIR ${APPLICATION_PATH}
 
 # Drop to non-privileged user.
-USER $user_name
+USER ${user_name}

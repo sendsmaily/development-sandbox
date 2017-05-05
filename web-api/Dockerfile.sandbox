@@ -8,7 +8,7 @@ ARG group_name
 
 # Set up local user.
 RUN groupadd -g ${group_id} ${group_name} \
-    && useradd -m -u $user_id -g ${group_id} $user_name -s /bin/bash
+    && useradd -m -u ${user_id} -g ${group_id} ${user_name} -s /bin/bash
 
 # Set up environment.
 ENV APPLICATION_PATH=/srv/application \
