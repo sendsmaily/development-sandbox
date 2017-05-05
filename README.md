@@ -247,6 +247,20 @@ Main design decision behind implementing a management script is to hide away the
 
 Besides running the sandbox, as is the case with this example project, you could also use the management script for any other maintenance task on sandbox - flushing databases and repopulating them from fixtures, flushing caches, updating your codebase to latest `HEAD`, etc. Whatever your exact requirements might be.
 
+#### Available sub-commands
+
+Management script provides the following interface for managing the sandbox:
+* `build [SERVICE]` - builds the sandbox's images, cleans up after itself by removing untagged images created by the build. Wrapper around `docker-compose build`.
+Arguments passed to command are forwarded to `docker-compose build`.
+* `clean` - cleans the environment. Removes created networks, stopped containers and untagged images.
+Wrapper around `docker-compose down --remove-orphans` and `docker image prune -f`.
+* `down [SERVICE]` - brings the sandbox down. Does not remove created networks or stopped containers. Wrapper around `docker-compose stop`. Arguments passed to command are forwarded to `docker-compose stop`.
+* `exec SERVICE CMD` - runs a one-off command against service. Wrapper around `docker-compose exec`.
+Arguments passed to command are forwarded to `docker-compose exec`.
+* `logs [SERVICE]` - attaches to logs output. Useful for monitoring services the shell isn't automatically attached to.
+* `up [SERVICE]` - brings the sandbox up and attaches sandbox shell. Wrapper around `docker-compose up`.
+Arguments passed to command are forwarded to `docker-compose up`. `SERVICE` argument is useful when using `depends_on` feature.
+
 ### Shell interface
 
 Shell interface was implemented to allow developers continue using (usually shell-based) workflows for different developer tools and frameworks. This involves managing dependencies, running development servers, running tests and linters.
