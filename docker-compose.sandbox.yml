@@ -29,3 +29,47 @@ services:
     networks:
       default:
         ipv4_address: '172.30.255.254'  # Setting well-known IP address for your /etc/hosts file.
+
+  web-api:
+    build:
+      context: ./web-api
+      dockerfile: Dockerfile.sandbox
+      args:
+        user_id: ${SANDBOX_USER_ID}
+        user_name: ${SANDBOX_USER_NAME}
+        group_id: ${SANDBOX_GROUP_ID}
+        group_name: ${SANDBOX_GROUP_NAME}
+    image: development-sandbox/web-api:sandbox
+    hostname: web-api  # For nice label on shell prompt.
+    entrypoint: /bin/bash
+    volumes:
+      - ./web-api:/srv/application
+      - ./.data/packages:/srv/packages
+    environment:
+      - DJANGO_SETTINGS_MODULE=web_api.settings
+      - WEB_API_DATABASE_HOST=database
+      - WEB_API_DATABASE_PORT=3306
+      - WEB_API_DATABASE_NAME=development-sandbox
+      - WEB_API_DATABASE_USER=root
+      - WEB_API_DATABASE_PASSWORD=development-sandbox
+    stdin_open: true
+    tty: true
+
+  web-app:
+    build:
+      context: ./web-app
+      dockerfile: Dockerfile.sandbox
+      args:
+        user_id: ${SANDBOX_USER_ID}
+        user_name: ${SANDBOX_USER_NAME}
+        group_id: ${SANDBOX_GROUP_ID}
+        group_name: ${SANDBOX_GROUP_NAME}
+    image: development-sandbox/web-app:sandbox
+    hostname: web-app  # For nice label on shell prompt.
+    entrypoint: /bin/bash
+    volumes:
+      - ./web-app:/srv/application
+    environment:
+      - WEB_API_BASE_URL=http://api.development.sandbox
+    stdin_open: true
+    tty: true

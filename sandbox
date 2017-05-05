@@ -24,8 +24,6 @@ function _stack() {
     docker-compose \
         --project-name ${SANDBOX_PROJECT_NAME} \
         --file docker-compose.sandbox.yml \
-        --file web-app/service.sandbox.yml \
-        --file web-api/service.sandbox.yml \
         "${@:1}"
 }
 
