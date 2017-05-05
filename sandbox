@@ -28,21 +28,6 @@ function _stack() {
 }
 
 
-function _clean() {
-    #
-    # Stack clean helper.
-    #
-    # Tears down stack and removes dangling images.
-    #
-
-    # Tear down stack.
-    _stack ${1} down --remove-orphans
-
-    # Clean dangling images.
-    docker image prune -f
-}
-
-
 function _help() {
     #
     # Helper for printing usage info.
@@ -54,12 +39,11 @@ function _help() {
     echo "  sandbox COMMAND [ARGUMENTS]"
     echo
     echo "Available commands:"
-    echo "  build [ARGS]            Build or rebuild the stack."
-    echo "                              Accepts same arguments as 'docker-compose build'."
-    echo "  up [ARGS]               Start the stack."
-    echo "                              Accepts same argument as 'docker-compose up'."
+    echo "  build [ARGS]            Build or rebuild the stack. Accepts same arguments as 'docker-compose build'."
+    echo "  up [ARGS]               Start the stack. Accepts same argument as 'docker-compose up'."
     echo "  down                    Stop the stack."
     echo "  clean                   Run the cleanup."
+    echo "  exec SERVICE CMD        Run a one-off command against service."
     echo "  logs [SERVICE]          Attach to logs output."
     echo
 }
@@ -74,7 +58,11 @@ case ${1:-} in
         docker image prune -f
         ;;
     "clean")
-        _clean
+        # Tear down stack.
+        _stack down --remove-orphans
+
+        # Clean dangling images.
+        docker image prune -f
         ;;
     "exec")
         _stack exec "${@:2}"
