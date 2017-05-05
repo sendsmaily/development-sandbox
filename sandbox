@@ -74,17 +74,17 @@ case ${1:-} in
         _stack logs -f "${@:2}"
         ;;
     "up")
-        echo -e "\033[1;33mEnsuring directories...\033[0m"
+        echo -e "Ensuring directories..."
         # Ensure packages directory exists before launching the stack.
         # This allows the mounted volume to have current user's permissions
         # within container.
         mkdir -p ${SANDBOX_DIR}/.data/packages
 
-        echo -e "\033[1;33mLaunching stack...\033[0m"
+        echo -e "\033[1;37mLaunching stack...\033[0m"
         _stack up -d ${@:2}
 
         # Attach terminals.
-        echo -e "\033[1;33mAttaching terminals...\033[0m"
+        echo -e "\033[1;37mAttaching terminals...\033[0m"
         exec gnome-terminal \
             --tab --title "web-app" --command "docker attach --sig-proxy=false `_stack ps -q web-app`" \
             --tab --title "web-api" --command "docker attach --sig-proxy=false `_stack ps -q web-api`" \
