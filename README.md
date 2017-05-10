@@ -57,13 +57,7 @@ That's all! You have a fully functional development environment.
 
 You interact with sandbox using its `sandbox` management script in the project's root. It is a wrapper around Docker and Docker Compose's commands, providing a high level interface to interacting with the stack.
 
-> To get inline help on available sub-commands, invoke the script with no arguments:
-
-    $ ./sandbox
-
-> Or pass the `help` argument:
-
-    $ ./sandbox help
+> To get inline help on available sub-commands, invoke the script with no arguments: `$ ./sandbox`, or pass the `help` argument: `$ ./sandbox help`
 
 Change into the project's directory you checked out earlier and run the build:
 
